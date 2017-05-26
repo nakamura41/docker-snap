@@ -1,4 +1,4 @@
-FROM python:3.6.1
+FROM python:2.7.13
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     dbus \
@@ -12,9 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libcups2 \
     libgnuplot-iostream-dev \
     nas \
-    python-dev \
     python-gnuplot \
-    swig \
     unzip \
     zip \
     && apt-get autoremove \
@@ -22,10 +20,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/tmp /var/lib/apt/lists/* \
     && rm -rf /tmp/*
 
-RUN git clone https://github.com/snap-stanford/snap.git \
-    && cd snap \
+RUN wget -q http://snap.stanford.edu/releases/Snap-3.0.zip \
+    && unzip -q Snap-3.0.zip \
+    && rm Snap-3.0.zip \
+    && cd Snap-3.0 \
     && make all
 
-RUN git clone https://github.com/snap-stanford/snap-python.git \
-    && cd snap-python \
-    && make
+RUN wget -q http://snap.stanford.edu/snappy/release/snap-3.0.2-3.0-centos6.5-x64-py2.6.tar.gz \
+    && tar -xzf snap-3.0.2-3.0-centos6.5-x64-py2.6.tar.gz \
+    && cd snap-3.0.2-3.0-centos6.5-x64-py2.6 \
+    && python setup.py install \
+    && cd .. \
+    && rm -rf snap-3.0.2-3.0-centos6.5-x64-py2.6.tar.gz snap-3.0.2-3.0-centos6.5-x64-py2.6
